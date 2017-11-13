@@ -62,6 +62,7 @@ public class WikiCrawler
 			URL url = new URL(BASE_URL+"/wiki/Physics");
 			InputStream is = url.openStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			req_num++;
 			while ((s=br.readLine())!=null)
 		    {
 				if(!started && s.contains("<p>")){
