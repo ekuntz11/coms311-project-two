@@ -8,11 +8,14 @@
 //  (i.e., you may include java.util.ArrayList etc. here, but not junit, apache commons, google guava, etc.)
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 
@@ -39,11 +42,12 @@ public class WikiCrawler
 	{
 		// TODO implementation
 		ArrayList<String> toreturn = new ArrayList<String>();
+		doc = doc.substring(doc.indexOf("<p>"));
 		int cur =0;
-		while((cur = doc.indexOf("<a href=\"",cur)) != -1){
-			int idx = doc.indexOf("\"", cur+9);
-			String toadd = doc.substring(cur+9, idx);
-			if(!toadd.contains(";") && !toadd.contains("#") && toadd.substring(0, 6).compareTo("/wiki/") ==0){
+		while((cur = doc.indexOf("href=\"",cur)) != -1){
+			int idx = doc.indexOf("\"", cur+6);
+			String toadd = doc.substring(cur+6, idx);
+			if(!toadd.contains(":") && !toadd.contains("#") && toadd.substring(0, 6).compareTo("/wiki/") ==0){
 				toreturn.add(toadd);
 			}
 		    cur = idx;
@@ -58,19 +62,13 @@ public class WikiCrawler
 			String s;
 			String page = "";
 			ArrayList<String> links;
-			boolean started = false;
 			URL url = new URL(BASE_URL+"/wiki/Physics");
 			InputStream is = url.openStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(is));
 			req_num++;
 			while ((s=br.readLine())!=null)
 		    {
-				if(!started && s.contains("<p>")){
-					started = true;
-				}
-				if(started){
 					page += s + '\n';
-				}
 		    }
 			if(topics == null || topics.size() == 0){
 				//continue with BFS as normal
@@ -98,9 +96,17 @@ public class WikiCrawler
 		
 	}
 	
-	public static void main(String [] args){
+	public static void main(String [] args) throws FileNotFoundException{
 		WikiCrawler w = new WikiCrawler("/wiki/Physics", 200, null, "test.txt");
-		w.crawl();
+		//w.crawl();
+		Scanner scanner = new Scanner( new File("src/sample.txt") );
+		String text = scanner.useDelimiter("\\A").next();
+		scanner.close();
+		ArrayList<String> result = w.extractLinks(text);
+		for(int i=0;i<result.size();i++){
+			System.out.println(result.get(i));
+		}
+		
 	
 	}
 }
