@@ -18,10 +18,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
-
+import java.util.Set;
 
 /**
  * 
@@ -74,6 +76,11 @@ public class WikiCrawler
 	 * Set to hold visited pages
 	 */
 	HashSet<String> visited;
+	/**
+	 * graph to hold the page and links
+	 */
+	Graph web_graph;
+	
 
 	public WikiCrawler(String seedUrl, int max, ArrayList<String> topics, String fileName)
 	{
@@ -86,14 +93,7 @@ public class WikiCrawler
 		q.add(seedUrl); //add seedURL to queue
 		visited = new HashSet<String>();
 		visited.add(seedUrl); //add seedURL to visited set
-		
-		try{
-			writer = new PrintWriter(fileName, "UTF-8");
-		}catch(UnsupportedEncodingException e){
-			System.out.println(e.getMessage());
-		}catch(FileNotFoundException e){
-			System.out.println(e.getMessage());
-		}
+		web_graph = new Graph();
 		
 		
 	}
@@ -137,9 +137,10 @@ public class WikiCrawler
 			ArrayList<String> links;
 			String cur_page;
 			while(!q.isEmpty()){
+				boolean valid = true;
 				cur_page = q.remove();
 				if(req_num%50 ==0){
-					Thread.sleep(3000);
+					Thread.sleep(300);
 				}
 				//read html from page into stream
 				URL url = new URL(BASE_URL+cur_page);
@@ -156,52 +157,78 @@ public class WikiCrawler
 				if(topics == null || topics.size() == 0){
 					//continue with BFS as normal
 					links = extractLinks(page);
+					valid = true;
 				} else {
 					//check to make sure page has all topics before extracting links
-					boolean valid = true;
+					valid = true;
 					for(int i=0; i<topics.size(); i++){
 						if(!text_component.contains(topics.get(i))){
 							valid = false;
 							break;
 						}
 					}
-					if(valid){
-						//it has all the topics, continue with BFS as normal
-						links = extractLinks(page);
-						for(int i=0;i<links.size();i++){
-							//for each link check if it has been visited if it hasnt add it to the queue
-							if(!visited.contains(links.get(i)) && visited.size() <= max){ // this way we stop adding verticies once we reach our max
-								q.add(links.get(i));
-								visited.add(links.get(i));
-							}
-							//TODO add the edge to the graph
-						}
-					} else {
-						//if it doesn't have all topics do not add it to the graph
-					}
 				}
-			}	
+				if(valid){
+					//it has all the topics, continue with BFS as normal
+					links = extractLinks(page);
+					for(int i=0;i<links.size();i++){
+						//for each link check if it has been visited if it hasnt add it to the queue
+						if(!visited.contains(links.get(i)) && visited.size() < max){ // this way we stop adding verticies once we reach our max
+							q.add(links.get(i));
+							visited.add(links.get(i));
+						}
+						String t = links.get(i);
+						boolean test = visited.contains(links.get(i));
+						if(visited.contains(links.get(i)) && cur_page.compareTo(links.get(i))!=0){
+							String tmp = links.get(i);
+							web_graph.add_edge(cur_page, tmp);
+						} else {
+							if(visited.size() < max && cur_page.compareTo(links.get(i))!=0){
+								web_graph.add_edge(cur_page, links.get(i));
+							}
+						}
+					}
+				} else {
+					//if it doesn't have all topics do not add it to the graph
+				}
+			}
+				
+			writer = new PrintWriter(fileName, "UTF-8");
+			writer.println(visited.size());
+			ArrayList<Vertex> itr = web_graph.get_vertices();
+			for(int i=0; i<itr.size(); i++){
+				Hashtable<String,Edge> edges = itr.get(i).get_edges();
+				Set<String> keys = edges.keySet();
+				Iterator<String> itr1 = keys.iterator();
+				while (itr1.hasNext()) { 
+					Edge e = edges.get(itr1.next());
+					writer.println(e.from.name + " " + e.to.name);
+				}
+			}
 			
+			writer.close();
 		} catch(IOException e){
 			System.out.println("IO Exception in crawl()");
 		} catch (InterruptedException e) {
 			System.out.println("sleep exception");
 		}
-		writer.close();
+		
+		
 	}
 	
 	
 	public static void main(String [] args) throws FileNotFoundException{
-		WikiCrawler w = new WikiCrawler("/wiki/Physics", 200, null, "test.txt");
+		WikiCrawler w = new WikiCrawler("/wiki/Complexity theory", 10, null, "test.txt");
 		
-		//w.crawl();
-		Scanner scanner = new Scanner( new File("src/sample.txt") );
-		String text = scanner.useDelimiter("\\A").next();
-		scanner.close();
-		ArrayList<String> result = w.extractLinks(text);
-		for(int i=0;i<result.size();i++){
-			System.out.println(result.get(i));
-		}
+		w.crawl();
+		System.out.println("done");
+		//Scanner scanner = new Scanner( new File("src/sample.txt") );
+		//String text = scanner.useDelimiter("\\A").next();
+		//scanner.close();
+		//ArrayList<String> result = w.extractLinks(text);
+		//for(int i=0;i<result.size();i++){
+		//	System.out.println(result.get(i));
+		//}
 		
 	
 	}
