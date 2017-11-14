@@ -93,8 +93,7 @@ public class WikiCrawler
 		q.add(seedUrl); //add seedURL to queue
 		visited = new HashSet<String>();
 		visited.add(seedUrl); //add seedURL to visited set
-		web_graph = new Graph();
-		
+		web_graph = new Graph();		
 		
 	}
 
@@ -128,9 +127,7 @@ public class WikiCrawler
 	 */
 	public void crawl()
 	{
-		// TODO implementation
-		try{
-			
+		try{			
 			String s;
 			String page = "";
 			String text_component;

@@ -6,11 +6,17 @@ import java.util.Set;
 public class Graph
 {
   private Hashtable<String, Vertex> vertices;
-  private int array_size = 128;
+  private int array_size;
 
   public Graph()
   {
+	array_size = 128;
     vertices = new Hashtable<String, Vertex>(array_size);
+  }
+  
+  public Graph(int size) {
+	  array_size = size;
+	  vertices = new Hashtable<String, Vertex>(array_size);
   }
 
   public void add_edge(String from, String to)
@@ -37,14 +43,27 @@ public class Graph
 	}
     return toreturn;
   }
+  
+  /**
+   * Returns the out degree of a vertex represented by the String v.
+   * @param v
+   * 	String that represents a vertex to get out degree of
+   * @return
+   * 	out degree of the vertex represented by the string s
+   */
+  public int get_out_degree(String v) {
+	  if(vertices.get(v) != null) {
+		  return vertices.get(v).edges.size();
+	  }
+	  return -1;
+  }
 
   public String toString()
   {
     String s;
-    int i;
-
     s = "";
-    for (i = 0; i < vertices.size(); i++) {
+    
+    for (int i = 0; i < vertices.size(); i++) {
       if (vertices.get(i) == null) {
         continue;
       }
