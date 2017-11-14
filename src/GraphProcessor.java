@@ -77,15 +77,17 @@ public class GraphProcessor
 
 	public ArrayList<String> bfsPath(String u, String v)
 	{
-		if(u == null || v == null) {
-			
-		}
-		
 		ArrayList<String> path = new ArrayList<String>();
+		if(u == null || v == null) {
+			return path;
+		}
 		Queue<Vertex> queue = new LinkedList<Vertex>(); //queue for BFS
 		HashSet<String> visited = new HashSet<String>(); //for visited vertices
 		HashMap<String, String> parent_map = new HashMap<String,String>(); //'parent' array
 		
+		if(graph.get_vertex(u) == null) {
+			return path;
+		}
 		queue.add(graph.get_vertex(u)); //get strarting vertice 'root'
 		visited.add(u);//add to visited
 		parent_map.put(u, null); //starting vertex has no parent
@@ -96,16 +98,12 @@ public class GraphProcessor
 			//for every outgoing edge of our vertex
 			for(String key:edges.keySet()) {
 				//if the 'to' vertex is not marked
-				String to_vertex_name = key;//edges.get(key).get_to();
+				String to_vertex_name = key;
 				String from_vertex_name = edges.get(key).get_from();
 				if(from_vertex_name.equals(vertex.name) && !visited.contains(to_vertex_name)){
 					//set parent
 					parent_map.put(to_vertex_name, vertex.name);
-					
-					//we have reached our vertex v; exit loop and end BFS traversal
-				//	if(to_vertex_name.equals(v)) {
-					//	break;
-				//	}
+
 					//mark 'to' vertex and add to queue
 					queue.add(graph.get_vertex(to_vertex_name));
 					visited.add(to_vertex_name);
@@ -187,7 +185,7 @@ public class GraphProcessor
 			
 			//System.out.print(gp.outDegree("Chicago"));
 			
-			ArrayList<String> path = gp.bfsPath("Minneapolis", "Ames");
+			ArrayList<String> path = gp.bfsPath("s", "Ames"); //Minneapoli
 			for(int i = 0; i < path.size(); i ++) {
 				System.out.println(" " + path.get(i) + " ");
 			}
