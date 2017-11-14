@@ -24,47 +24,93 @@ import java.util.Queue;
 import java.util.Scanner;
 
 
-
+/**
+ * 
+ * @author Eva Kuntz & Merritt Harvey
+ *
+ */
 public class WikiCrawler
 {
+	/**
+	 * Base URL
+	 */
 	static final String BASE_URL = "https://en.wikipedia.org";
-	// other member fields and methods
+	
+	/**
+	 * Seed URL
+	 */
 	String seed;
-	int max, req_num;
+	
+	/**
+	 * Maximum number of pages to crawl
+	 */
+	int max;
+	
+	/**
+	 * Request number
+	 */
+	int req_num;
+	
+	/**
+	 * List of topics to search for
+	 */
 	ArrayList<String> topics;
+	
+	/**
+	 * The file name
+	 */
 	String fileName;
+	
+	/**
+	 * PrintWriter instance
+	 */
 	PrintWriter writer;
+	
+	/**
+	 * Queue for this instance
+	 */
 	Queue<String> q;
+	
+	/**
+	 * Set to hold visited pages
+	 */
 	HashSet<String> visited;
 
 	public WikiCrawler(String seedUrl, int max, ArrayList<String> topics, String fileName)
 	{
-		// implementation
-		seed = seedUrl;
-		max = this.max;
-		topics = this.topics;
-		fileName = this.fileName;
+		//set all instance variables
+		this.seed = seedUrl;
+		this.max = max;
+		this.topics = topics;
+		this.fileName = fileName;
 		q = new LinkedList<String>();
-		q.add(seedUrl);
+		q.add(seedUrl); //add seedURL to queue
 		visited = new HashSet<String>();
-		visited.add(seedUrl);
+		visited.add(seedUrl); //add seedURL to visited set
+		
 		try{
-			new PrintWriter(fileName, "UTF-8");
+			writer = new PrintWriter(fileName, "UTF-8");
 		}catch(UnsupportedEncodingException e){
-			System.out.println("encoding exception");
+			System.out.println(e.getMessage());
 		}catch(FileNotFoundException e){
-			System.out.println("FNF exception");
+			System.out.println(e.getMessage());
 		}
 		
 		
 	}
 
-	// NOTE: extractLinks takes the source HTML code, NOT a URL
+	/**
+	 * Method that extracts the links from a given
+	 * source HTML code (not a URL)
+	 * @param doc
+	 * 	HTML source code to search
+	 * @return
+	 * 	List of links
+	 */
 	public ArrayList<String> extractLinks(String doc)
 	{
-		// TODO implementation
 		ArrayList<String> toreturn = new ArrayList<String>();
-		doc = doc.substring(doc.indexOf("<p>"));
+		doc = doc.substring(doc.indexOf("<p>")); //get substring starting at first index of '<p>' character
 		int cur =0;
 		while((cur = doc.indexOf("href=\"",cur)) != -1){
 			int idx = doc.indexOf("\"", cur+6);
@@ -77,6 +123,10 @@ public class WikiCrawler
 		return toreturn;
 	}
 
+	
+	/**
+	 * WikiCrawl method.
+	 */
 	public void crawl()
 	{
 		// TODO implementation
@@ -131,11 +181,7 @@ public class WikiCrawler
 						//if it doesn't have all topics do not add it to the graph
 					}
 				}
-			}
-			
-			
-			
-			
+			}	
 			
 		} catch(IOException e){
 			System.out.println("IO Exception in crawl()");
@@ -148,6 +194,7 @@ public class WikiCrawler
 	
 	public static void main(String [] args) throws FileNotFoundException{
 		WikiCrawler w = new WikiCrawler("/wiki/Physics", 200, null, "test.txt");
+		
 		//w.crawl();
 		Scanner scanner = new Scanner( new File("src/sample.txt") );
 		String text = scanner.useDelimiter("\\A").next();
