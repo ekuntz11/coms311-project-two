@@ -92,7 +92,7 @@ public class WikiCrawler
 					Thread.sleep(3000);
 				}
 				//read html from page into stream
-				URL url = new URL(BASE_URL+"/wiki/Physics");
+				URL url = new URL(BASE_URL+cur_page);
 				InputStream is = url.openStream();
 				BufferedReader br = new BufferedReader(new InputStreamReader(is));
 				req_num++;
