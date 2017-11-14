@@ -77,6 +77,10 @@ public class GraphProcessor
 
 	public ArrayList<String> bfsPath(String u, String v)
 	{
+		if(u == null || v == null) {
+			
+		}
+		
 		ArrayList<String> path = new ArrayList<String>();
 		Queue<Vertex> queue = new LinkedList<Vertex>(); //queue for BFS
 		HashSet<String> visited = new HashSet<String>(); //for visited vertices
@@ -92,15 +96,16 @@ public class GraphProcessor
 			//for every outgoing edge of our vertex
 			for(String key:edges.keySet()) {
 				//if the 'to' vertex is not marked
-				String to_vertex_name = edges.get(key).get_to();
-				if(!visited.contains(to_vertex_name)){
+				String to_vertex_name = key;//edges.get(key).get_to();
+				String from_vertex_name = edges.get(key).get_from();
+				if(from_vertex_name.equals(vertex.name) && !visited.contains(to_vertex_name)){
 					//set parent
 					parent_map.put(to_vertex_name, vertex.name);
 					
 					//we have reached our vertex v; exit loop and end BFS traversal
-					if(to_vertex_name.equals(v)) {
-						break;
-					}
+				//	if(to_vertex_name.equals(v)) {
+					//	break;
+				//	}
 					//mark 'to' vertex and add to queue
 					queue.add(graph.get_vertex(to_vertex_name));
 					visited.add(to_vertex_name);
@@ -117,16 +122,16 @@ public class GraphProcessor
 		
 		path.add(v);
 		String parent = parent_map.get(v); //get parent of v ('to' vertex)
-		while(!parent.equals(u)) {
-			if(parent != null) {
+		while(parent != null) {
+			//if(parent != null) {
 				path.add(parent);
 				parent = parent_map.get(parent); //get next parent
-			}
+			//}
 		}
 		//now, reverse order of 'path' so we start with the 'from' vertex and end at 'to' vertex
 		Stack<String> stack = new Stack<String>();
 		for(int i = 0; i < path.size(); i++) {
-			stack.push(path.remove(i));
+			stack.push(path.get(i));
 		}
 		path.clear(); //clear list
 		
@@ -180,7 +185,12 @@ public class GraphProcessor
 				System.out.println(vertices.get(i).name + " Edges Size: " + vertices.get(i).edges.size());
 			}
 			
-			System.out.print(gp.outDegree("Chicago"));
+			//System.out.print(gp.outDegree("Chicago"));
+			
+			ArrayList<String> path = gp.bfsPath("Minneapolis", "Ames");
+			for(int i = 0; i < path.size(); i ++) {
+				System.out.println(" " + path.get(i) + " ");
+			}
 		}catch(FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
