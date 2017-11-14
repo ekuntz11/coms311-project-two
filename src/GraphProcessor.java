@@ -200,8 +200,13 @@ public class GraphProcessor
 			
 			ArrayList<String> path = gp.bfsPath("s", "Ames"); //Minneapoli
 			for(int i = 0; i < path.size(); i ++) {
-				System.out.println(" " + path.get(i) + " ");
+				System.out.print(path.get(i) + " ");
 			}
+			System.out.println("");
+			
+			Graph g = new Graph();
+			g.get_vertices();
+			
 		}catch(FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
