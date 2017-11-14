@@ -18,6 +18,10 @@ public class Graph
 	  array_size = size;
 	  vertices = new Hashtable<String, Vertex>(array_size);
   }
+  
+  public Vertex get_vertex(String v) {
+	  return vertices.get(v);
+  }
 
   public void add_edge(String from, String to)
   {

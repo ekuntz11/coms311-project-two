@@ -10,10 +10,20 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.Set;
+import java.util.Stack;
 
-
+/**
+ * Graph Processor Class
+ * @author Eva Kuntz & Merritt Harvey
+ *
+ */
 public class GraphProcessor
 {
 	/**
@@ -26,7 +36,6 @@ public class GraphProcessor
 	 */
 	int num_vertices;
 
-	// NOTE: graphData should be an absolute file path
 	/**
 	 * Constructor for GraphProcessor class
 	 * @param graphData
@@ -38,7 +47,7 @@ public class GraphProcessor
 	{
 		File file = new File(graphData);
 		Scanner inScanner = new Scanner(file);
-		//first line is number of vertices
+		//first line in file is number of vertices
 		num_vertices = Integer.parseInt(inScanner.nextLine());
 		String s = "";
 		String[] strings;
@@ -68,8 +77,64 @@ public class GraphProcessor
 
 	public ArrayList<String> bfsPath(String u, String v)
 	{
-		//TODO implementation
-		return null;
+		ArrayList<String> path = new ArrayList<String>();
+		Queue<Vertex> queue = new LinkedList<Vertex>(); //queue for BFS
+		HashSet<String> visited = new HashSet<String>(); //for visited vertices
+		HashMap<String, String> parent_map = new HashMap<String,String>(); //'parent' array
+		
+		queue.add(graph.get_vertex(u)); //get strarting vertice 'root'
+		visited.add(u);//add to visited
+		parent_map.put(u, null); //starting vertex has no parent
+		
+		while(!queue.isEmpty()) {
+			Vertex vertex = queue.remove();
+			Hashtable<String, Edge> edges = vertex.get_edges();
+			//for every outgoing edge of our vertex
+			for(String key:edges.keySet()) {
+				//if the 'to' vertex is not marked
+				String to_vertex_name = edges.get(key).get_to();
+				if(!visited.contains(to_vertex_name)){
+					//set parent
+					parent_map.put(to_vertex_name, vertex.name);
+					
+					//we have reached our vertex v; exit loop and end BFS traversal
+					if(to_vertex_name.equals(v)) {
+						break;
+					}
+					//mark 'to' vertex and add to queue
+					queue.add(graph.get_vertex(to_vertex_name));
+					visited.add(to_vertex_name);
+				}
+				
+			}
+		}
+		
+		//if the 'to' vertex does not appear in our parent array
+		//return empty arrayList
+		if(!parent_map.containsKey(v)) {
+			return path;
+		}
+		
+		path.add(v);
+		String parent = parent_map.get(v); //get parent of v ('to' vertex)
+		while(!parent.equals(u)) {
+			if(parent != null) {
+				path.add(parent);
+				parent = parent_map.get(parent); //get next parent
+			}
+		}
+		//now, reverse order of 'path' so we start with the 'from' vertex and end at 'to' vertex
+		Stack<String> stack = new Stack<String>();
+		for(int i = 0; i < path.size(); i++) {
+			stack.push(path.remove(i));
+		}
+		path.clear(); //clear list
+		
+		while(!stack.isEmpty()) {
+			path.add(stack.pop());
+		}
+		
+		return path;
 	}
 
 	public int diameter()
@@ -115,7 +180,7 @@ public class GraphProcessor
 				System.out.println(vertices.get(i).name + " Edges Size: " + vertices.get(i).edges.size());
 			}
 			
-			System.out.print(gp.outDegree("test"));
+			System.out.print(gp.outDegree("Chicago"));
 		}catch(FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
