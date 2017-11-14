@@ -74,10 +74,22 @@ public class GraphProcessor
 		return graph.get_out_degree(v);
 	}
 
-
+	/**
+	 * Method that performs a BFS traversal on this instance's graph
+	 * and returns a path starting at the vertex u and ending at the
+	 * vertex v, if a path between the two exists.
+	 * @param u
+	 * 	Starting vertex
+	 * @param v
+	 * 	Ending vertex
+	 * @return
+	 * 	ArrayList<String> of the path from vertex u to vertex v, if a
+	 * 	path exists, else returns an empty ArrayList<String>.
+	 */
 	public ArrayList<String> bfsPath(String u, String v)
 	{
 		ArrayList<String> path = new ArrayList<String>();
+		//if vertices are null, return empty list
 		if(u == null || v == null) {
 			return path;
 		}
@@ -85,10 +97,11 @@ public class GraphProcessor
 		HashSet<String> visited = new HashSet<String>(); //for visited vertices
 		HashMap<String, String> parent_map = new HashMap<String,String>(); //'parent' array
 		
+		//if the starting vertex is not in the graph, return the empty list
 		if(graph.get_vertex(u) == null) {
 			return path;
 		}
-		queue.add(graph.get_vertex(u)); //get strarting vertice 'root'
+		queue.add(graph.get_vertex(u)); //get starting vertex (the 'root')
 		visited.add(u);//add to visited
 		parent_map.put(u, null); //starting vertex has no parent
 		
