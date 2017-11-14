@@ -134,6 +134,7 @@ public class WikiCrawler
 			ArrayList<String> links;
 			String cur_page;
 			while(!q.isEmpty()){
+				page="";
 				boolean valid = true;
 				cur_page = q.remove();
 				if(req_num%50 ==0){
@@ -215,7 +216,7 @@ public class WikiCrawler
 	
 	
 	public static void main(String [] args) throws FileNotFoundException{
-		WikiCrawler w = new WikiCrawler("/wiki/Complexity theory", 10, null, "test.txt");
+		WikiCrawler w = new WikiCrawler("/wiki/Complexity theory", 20, null, "test.txt");
 		
 		w.crawl();
 		System.out.println("done");
