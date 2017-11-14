@@ -13,8 +13,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
 
 
@@ -27,6 +33,9 @@ public class WikiCrawler
 	int max, req_num;
 	ArrayList<String> topics;
 	String fileName;
+	PrintWriter writer;
+	Queue<String> q;
+	HashSet<String> visited;
 
 	public WikiCrawler(String seedUrl, int max, ArrayList<String> topics, String fileName)
 	{
@@ -35,6 +44,19 @@ public class WikiCrawler
 		max = this.max;
 		topics = this.topics;
 		fileName = this.fileName;
+		q = new LinkedList<String>();
+		q.add(seedUrl);
+		visited = new HashSet<String>();
+		visited.add(seedUrl);
+		try{
+			new PrintWriter(fileName, "UTF-8");
+		}catch(UnsupportedEncodingException e){
+			System.out.println("encoding exception");
+		}catch(FileNotFoundException e){
+			System.out.println("FNF exception");
+		}
+		
+		
 	}
 
 	// NOTE: extractLinks takes the source HTML code, NOT a URL
@@ -59,42 +81,70 @@ public class WikiCrawler
 	{
 		// TODO implementation
 		try{
+			
 			String s;
 			String page = "";
+			String text_component;
 			ArrayList<String> links;
-			URL url = new URL(BASE_URL+"/wiki/Physics");
-			InputStream is = url.openStream();
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			req_num++;
-			while ((s=br.readLine())!=null)
-		    {
-					page += s + '\n';
-		    }
-			if(topics == null || topics.size() == 0){
-				//continue with BFS as normal
-				links = extractLinks(page);
-			} else {
-				//return empty graph if seed doesn't contain all topics
-				boolean valid = true;
-				for(int i=0; i<topics.size(); i++){
-					if(!page.contains(topics.get(i))){
-						valid = false;
-						break;
-					}
+			String cur_page;
+			while(!q.isEmpty()){
+				cur_page = q.remove();
+				if(req_num%50 ==0){
+					Thread.sleep(3000);
 				}
-				if(valid){
-					//it has all the topics, continue with BFS as normal
+				//read html from page into stream
+				URL url = new URL(BASE_URL+"/wiki/Physics");
+				InputStream is = url.openStream();
+				BufferedReader br = new BufferedReader(new InputStreamReader(is));
+				req_num++;
+				//read from stream until it is complete
+				while ((s=br.readLine())!=null)
+			    {
+						page += s + '\n';
+			    }
+				text_component = page.substring(page.indexOf("<p>"));
+				//if there are no topics, extract all links
+				if(topics == null || topics.size() == 0){
+					//continue with BFS as normal
 					links = extractLinks(page);
 				} else {
-					//return empty webgraph;
+					//check to make sure page has all topics before extracting links
+					boolean valid = true;
+					for(int i=0; i<topics.size(); i++){
+						if(!text_component.contains(topics.get(i))){
+							valid = false;
+							break;
+						}
+					}
+					if(valid){
+						//it has all the topics, continue with BFS as normal
+						links = extractLinks(page);
+						for(int i=0;i<links.size();i++){
+							//for each link check if it has been visited if it hasnt add it to the queue
+							if(!visited.contains(links.get(i)) && visited.size() <= max){ // this way we stop adding verticies once we reach our max
+								q.add(links.get(i));
+								visited.add(links.get(i));
+							}
+							//TODO add the edge to the graph
+						}
+					} else {
+						//if it doesn't have all topics do not add it to the graph
+					}
 				}
 			}
 			
+			
+			
+			
+			
 		} catch(IOException e){
 			System.out.println("IO Exception in crawl()");
+		} catch (InterruptedException e) {
+			System.out.println("sleep exception");
 		}
-		
+		writer.close();
 	}
+	
 	
 	public static void main(String [] args) throws FileNotFoundException{
 		WikiCrawler w = new WikiCrawler("/wiki/Physics", 200, null, "test.txt");
