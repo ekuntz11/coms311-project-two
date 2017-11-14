@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
@@ -42,8 +41,8 @@ public class WikiCrawler
 		// implementation
 		seed = seedUrl;
 		max = this.max;
-		topics = this.topics;
-		fileName = this.fileName;
+		this.topics = topics;
+		this.fileName = fileName;
 		q = new LinkedList<String>();
 		q.add(seedUrl);
 		visited = new HashSet<String>();
