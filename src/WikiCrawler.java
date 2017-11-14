@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
@@ -143,7 +142,7 @@ public class WikiCrawler
 					Thread.sleep(3000);
 				}
 				//read html from page into stream
-				URL url = new URL(BASE_URL+"/wiki/Physics");
+				URL url = new URL(BASE_URL+cur_page);
 				InputStream is = url.openStream();
 				BufferedReader br = new BufferedReader(new InputStreamReader(is));
 				req_num++;
