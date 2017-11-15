@@ -215,7 +215,9 @@ public class WikiCrawler
 			}
 				
 			writer = new PrintWriter(fileName, "UTF-8");
-			writer.println(visited.size());
+			if(web_graph.get_vertices().size() > 0){
+				writer.println(web_graph.get_vertices().size());
+			}
 			ArrayList<Vertex> itr = web_graph.get_vertices();
 			for(int i=0; i<itr.size(); i++){
 				Hashtable<String,Edge> edges = itr.get(i).get_edges();
@@ -249,7 +251,9 @@ public class WikiCrawler
 		ArrayList<String> topics = new ArrayList<String>();
 		topics.add("computer");
 		topics.add("science");
-		WikiCrawler w = new WikiCrawler("/wiki/Computer_science", 200, null, "notopics.txt");
+		//topics.add("Iowa");
+		//topics.add("Cyclone");
+		WikiCrawler w = new WikiCrawler("/wiki/Computer_Science", 200, null, "WikiCS.txt");
 		long startTime = System.nanoTime();
 		w.crawl();
 		long endTime = System.nanoTime();
