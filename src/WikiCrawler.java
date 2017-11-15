@@ -170,25 +170,48 @@ public class WikiCrawler
 					//it has all the topics, continue with BFS as normal
 					links = extractLinks(page);
 					for(int i=0;i<links.size();i++){
-						//for each link check if it has been visited if it hasnt add it to the queue
+						//for each link check if it has been visited if it hasnt add it to the queue if it has the correct topics
 						if(!visited.contains(links.get(i)) && visited.size() < max){ // this way we stop adding verticies once we reach our max
-							q.add(links.get(i));
-							visited.add(links.get(i));
-						}
-						String t = links.get(i);
-						boolean test = visited.contains(links.get(i));
-						if(visited.contains(links.get(i)) && cur_page.compareTo(links.get(i))!=0){
-							String tmp = links.get(i);
-							web_graph.add_edge(cur_page, tmp);
-						} else {
-							if(visited.size() < max && cur_page.compareTo(links.get(i))!=0){
+							if(cur_page.compareTo(links.get(i))!=0){//if it is not a selfloop
+								if(topics == null || topics.size() == 0){//if there are no topics, add the vertex to visited, q, and add the edge to the graph
+									q.add(links.get(i));
+									visited.add(links.get(i));
+									web_graph.add_edge(cur_page, links.get(i));
+								} else { //we must check the page to make sure it has the topics before adding it to the graph
+									if(req_num%50 ==0){
+										Thread.sleep(3000);
+									}
+									url = new URL(BASE_URL+links.get(i));
+									is = url.openStream();
+									br = new BufferedReader(new InputStreamReader(is));
+									req_num++;
+									String tmp ="";
+									while ((s=br.readLine())!=null)
+								    {
+											tmp += s + '\n';
+								    }
+									String tmp_component = tmp.substring(tmp.indexOf("<p>"));
+									valid = true;
+									for(int j=0; j<topics.size(); j++){
+										if(!tmp_component.contains(topics.get(j))){
+											valid = false;
+											break;
+										}
+									}
+									if(valid){//if it has the topics, add the edge, put the vertex in both the q and visited
+										q.add(links.get(i));
+										visited.add(links.get(i));
+										web_graph.add_edge(cur_page, links.get(i));
+									}
+								}
+							}
+						}else if(visited.contains(links.get(i))) {//vertex the edge is going to is already in the graph
+							if(cur_page.compareTo(links.get(i))!=0){//if it is not a selfloop
 								web_graph.add_edge(cur_page, links.get(i));
 							}
 						}
 					}
-				} else {
-					//if it doesn't have all topics do not add it to the graph
-				}
+				}//if it doesn't have all topics do not add it to the graph
 			}
 				
 			writer = new PrintWriter(fileName, "UTF-8");
@@ -207,8 +230,10 @@ public class WikiCrawler
 			writer.close();
 		} catch(IOException e){
 			System.out.println("IO Exception in crawl()");
+			e.printStackTrace();
 		} catch (InterruptedException e) {
 			System.out.println("sleep exception");
+			e.printStackTrace();
 		}
 		
 		
@@ -221,7 +246,10 @@ public class WikiCrawler
 	 * @throws FileNotFoundException
 	 */
 	public static void main(String [] args) throws FileNotFoundException{
-		WikiCrawler w = new WikiCrawler("/wiki/Computer_science", 200, null, "test.txt");
+		ArrayList<String> topics = new ArrayList<String>();
+		topics.add("computer");
+		topics.add("science");
+		WikiCrawler w = new WikiCrawler("/wiki/Computer_science", 200, null, "notopics.txt");
 		long startTime = System.nanoTime();
 		w.crawl();
 		long endTime = System.nanoTime();
