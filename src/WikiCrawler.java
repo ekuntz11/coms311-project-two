@@ -138,7 +138,7 @@ public class WikiCrawler
 				boolean valid = true;
 				cur_page = q.remove();
 				if(req_num%50 ==0){
-					Thread.sleep(300);
+					Thread.sleep(3000);
 				}
 				//read html from page into stream
 				URL url = new URL(BASE_URL+cur_page);
@@ -221,10 +221,11 @@ public class WikiCrawler
 	 * @throws FileNotFoundException
 	 */
 	public static void main(String [] args) throws FileNotFoundException{
-		WikiCrawler w = new WikiCrawler("/wiki/Complexity theory", 20, null, "test.txt");
-		
+		WikiCrawler w = new WikiCrawler("/wiki/Computer_science", 200, null, "test.txt");
+		long startTime = System.nanoTime();
 		w.crawl();
-		System.out.println("done");
+		long endTime = System.nanoTime();
+		System.out.println("done in " + (endTime - startTime)/1000000000 + "seconds");
 		//Scanner scanner = new Scanner( new File("src/sample.txt") );
 		//String text = scanner.useDelimiter("\\A").next();
 		//scanner.close();
