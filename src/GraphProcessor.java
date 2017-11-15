@@ -182,7 +182,8 @@ public class GraphProcessor
 				if(path != null) {
 					//AND if the path contains the vertex that we want to calculate the centrality for, increment count
 					int index = path.indexOf(v); //returns -1 if not found
-					if(index != -1 && index != 0 && index != (path.size() - 1)){
+					//if(index != -1 && index != 0 && index != (path.size() - 1)){
+					if(index != -1) {
 						count++;
 					}
 				}
@@ -216,7 +217,7 @@ public class GraphProcessor
 	
 	public static void main(String[] args) {
 		try{
-			GraphProcessor gp = new GraphProcessor("C:\\Users\\kuntz\\Development\\coms311-project-two\\src\\eva_test.txt");
+			GraphProcessor gp = new GraphProcessor("C:\\Users\\kuntz\\Development\\coms311-project-two\\src\\eva_test_two.txt");
 			
 			ArrayList<Vertex> vertices = gp.get_vertices();
 			for(int i = 0; i < vertices.size(); i++) {
@@ -225,13 +226,16 @@ public class GraphProcessor
 			
 			//System.out.print(gp.outDegree("Chicago"));
 			
-			ArrayList<String> path = gp.bfsPath("Ames", "Ames"); //Minneapoli
+			ArrayList<String> path = gp.bfsPath("0", "3"); //Minneapoli
 			for(int i = 0; i < path.size(); i ++) {
 				System.out.print(path.get(i) + " ");
 			}
 			System.out.println("");
 			
-			System.out.println("Centrality of Ames: " + gp.centrality("Ames"));
+			System.out.println("Centrality of 0: " + gp.centrality("0"));
+			System.out.println("Centrality of 1: " + gp.centrality("1"));
+			System.out.println("Centrality of 2: " + gp.centrality("2"));
+			System.out.println("Centrality of 3: " + gp.centrality("3"));
 		}catch(FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
