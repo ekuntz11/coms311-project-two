@@ -159,10 +159,37 @@ public class GraphProcessor
 		return 0;
 	}
 
+	/**
+	 * Calculates the centrality of a given Vertex v.
+	 * @param v
+	 * 	Vertex v to calculate the centrality for
+	 * @return
+	 * 	Number of shorts paths that pass through Vertex v, otherwise returns 0.
+	 */
 	public int centrality(String v)
 	{
-		//TODO implementation
-		return 0;
+		//get all vertices for this graph
+		int count = 0;
+		ArrayList<Vertex> vertices = graph.get_vertices();
+		//for every vertex v in vertices
+		for(int i = 0; i < vertices.size(); i ++) {
+			//for every vertex u in vertices
+			for(int j = 0; j < vertices.size(); j++) {
+				//calculate one of the shortest paths
+				ArrayList<String> path = bfsPath(vertices.get(i).name, vertices.get(j).name);
+				
+				//if there actually exists a path between the vertices
+				if(path != null) {
+					//AND if the path contains the vertex that we want to calculate the centrality for, increment count
+					int index = path.indexOf(v); //returns -1 if not found
+					if(index != -1 && index != 0 && index != (path.size() - 1)){
+						count++;
+					}
+				}
+				
+			}
+		}
+		return count;
 	}
 	
 	/**
@@ -198,15 +225,13 @@ public class GraphProcessor
 			
 			//System.out.print(gp.outDegree("Chicago"));
 			
-			ArrayList<String> path = gp.bfsPath("s", "Ames"); //Minneapoli
+			ArrayList<String> path = gp.bfsPath("Ames", "Ames"); //Minneapoli
 			for(int i = 0; i < path.size(); i ++) {
 				System.out.print(path.get(i) + " ");
 			}
 			System.out.println("");
 			
-			Graph g = new Graph();
-			g.get_vertices();
-			
+			System.out.println("Centrality of Ames: " + gp.centrality("Ames"));
 		}catch(FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}

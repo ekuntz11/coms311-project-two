@@ -215,6 +215,11 @@ public class WikiCrawler
 	}
 	
 	
+	/**
+	 * Main Method for this class.
+	 * @param args
+	 * @throws FileNotFoundException
+	 */
 	public static void main(String [] args) throws FileNotFoundException{
 		WikiCrawler w = new WikiCrawler("/wiki/Complexity theory", 20, null, "test.txt");
 		
