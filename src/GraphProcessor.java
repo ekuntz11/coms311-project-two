@@ -155,19 +155,18 @@ public class GraphProcessor
 	 */
 	public int diameter()
 	{
-		ArrayList<String> first_bfs = bfs(graph.get_vertices().get((int)Math.random() % num_vertices).name);
-		String s = first_bfs.get(0);
-		String s_prime = first_bfs.get(first_bfs.size()-1);
-		ArrayList<String> second_bfs = bfs(s_prime);
+		ArrayList<String> bfs = bfs(graph.get_vertices().get(0).name);
+		String s = bfs.get(bfs.size()-1);
+		ArrayList<String> second_bfs = bfs(s);
 		String t = second_bfs.get(second_bfs.size() - 1);
 		
 		ArrayList<String> diameter_list = bfsPath(s,t);
-		int diameter = diameter_list.size() - 1;
+		int diameter = diameter_list.size();
 		if(diameter == 0) {
 			return 2 * num_vertices;
 		}
 		
-		return diameter;
+		return (diameter - 1);
 	}
 	
 	/**
