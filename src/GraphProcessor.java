@@ -89,10 +89,6 @@ public class GraphProcessor
 	public ArrayList<String> bfsPath(String u, String v)
 	{
 		ArrayList<String> path = new ArrayList<String>();
-		//if vertices are null, return empty list
-		if(u == null || v == null) {
-			return path;
-		}
 		Queue<Vertex> queue = new LinkedList<Vertex>(); //queue for BFS
 		HashSet<String> visited = new HashSet<String>(); //for visited vertices
 		HashMap<String, String> parent_map = new HashMap<String,String>(); //'parent' array
@@ -116,7 +112,6 @@ public class GraphProcessor
 				if(from_vertex_name.equals(vertex.name) && !visited.contains(to_vertex_name)){
 					//set parent
 					parent_map.put(to_vertex_name, vertex.name);
-
 					//mark 'to' vertex and add to queue
 					queue.add(graph.get_vertex(to_vertex_name));
 					visited.add(to_vertex_name);
@@ -153,10 +148,70 @@ public class GraphProcessor
 		return path;
 	}
 
+	/**
+	 * Returns the diameter of the graph.
+	 * @return
+	 * 	Diameter of the graph. If graph is empty, then returns 0.
+	 */
 	public int diameter()
 	{
-		// TODO implementation
-		return 0;
+		ArrayList<String> first_bfs = bfs(graph.get_vertices().get((int)Math.random() % num_vertices).name);
+		String s = first_bfs.get(0);
+		String s_prime = first_bfs.get(first_bfs.size()-1);
+		ArrayList<String> second_bfs = bfs(s_prime);
+		String t = second_bfs.get(second_bfs.size() - 1);
+		
+		ArrayList<String> diameter_list = bfsPath(s,t);
+		int diameter = diameter_list.size() - 1;
+		if(diameter == 0) {
+			return 2 * num_vertices;
+		}
+		
+		return diameter;
+	}
+	
+	/**
+	 * Private helper method that implements BFS starting from a
+	 * given root node.
+	 * Performs BFS on entire graph, not just finding a path
+	 * between two given vertices.
+	 * @param root
+	 * 	Root vertex to start BFS traversal from
+	 * @return
+	 * 	ArrayList<String> of the vertices visited in BFS traversal;
+	 * 	if the graph is empty, returns an empty list.
+	 */
+	private ArrayList<String> bfs(String root){
+		ArrayList<String> result = new ArrayList<String>();
+		ArrayList<String> path = new ArrayList<String>();
+		Queue<Vertex> queue = new LinkedList<Vertex>(); //queue for BFS
+		HashSet<String> visited = new HashSet<String>(); //for visited vertices
+	
+		//if the starting vertex is not in the graph, return the empty list
+		if(graph.get_vertex(root) == null) {
+			return path;
+		}
+		queue.add(graph.get_vertex(root)); //get starting vertex (the 'root')
+		visited.add(root);//add to visited
+		
+		while(!queue.isEmpty()) {
+			Vertex vertex = queue.remove();
+			result.add(vertex.name);
+			Hashtable<String, Edge> edges = vertex.get_edges();
+			//for every outgoing edge of our vertex
+			for(String key:edges.keySet()) {
+				//if the 'to' vertex is not marked
+				String to_vertex_name = key;
+				String from_vertex_name = edges.get(key).get_from();
+				if(from_vertex_name.equals(vertex.name) && !visited.contains(to_vertex_name)){
+					//mark 'to' vertex and add to queue
+					queue.add(graph.get_vertex(to_vertex_name));
+					visited.add(to_vertex_name);
+				}
+				
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -224,18 +279,30 @@ public class GraphProcessor
 				System.out.println(vertices.get(i).name + " Edges Size: " + vertices.get(i).edges.size());
 			}
 			
-			//System.out.print(gp.outDegree("Chicago"));
+			System.out.println("Out degree of 3: " + gp.outDegree("3"));
 			
 			ArrayList<String> path = gp.bfsPath("0", "3"); //Minneapoli
+			System.out.print("BFSPath: ");
 			for(int i = 0; i < path.size(); i ++) {
 				System.out.print(path.get(i) + " ");
 			}
 			System.out.println("");
 			
+			path.clear();
+			path = gp.bfs("3");
+			System.out.print("BFS: ");
+			for(int i = 0; i < path.size(); i ++) {
+				System.out.print(path.get(i) + " ");
+			}
+			System.out.println("");
+			
+			
 			System.out.println("Centrality of 0: " + gp.centrality("0"));
 			System.out.println("Centrality of 1: " + gp.centrality("1"));
 			System.out.println("Centrality of 2: " + gp.centrality("2"));
 			System.out.println("Centrality of 3: " + gp.centrality("3"));
+			
+			System.out.println("Diameter: " + gp.diameter());
 		}catch(FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
