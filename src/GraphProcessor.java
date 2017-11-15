@@ -164,8 +164,7 @@ public class GraphProcessor
 		int diameter = diameter_list.size();
 		if(diameter == 0) {
 			return 2 * num_vertices;
-		}
-		
+		}		
 		return (diameter - 1);
 	}
 	
