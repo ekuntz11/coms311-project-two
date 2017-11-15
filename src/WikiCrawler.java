@@ -24,6 +24,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 
@@ -109,7 +111,7 @@ public class WikiCrawler
 	{
 		ArrayList<String> toreturn = new ArrayList<String>();
 		doc = doc.substring(doc.indexOf("<p>")); //get substring starting at first index of '<p>' character
-		int cur =0;
+		/*int cur =0;
 		while((cur = doc.indexOf("href=\"",cur)) != -1){
 			int idx = doc.indexOf("\"", cur+6);
 			String toadd = doc.substring(cur+6, idx);
@@ -117,7 +119,24 @@ public class WikiCrawler
 				toreturn.add(toadd);
 			}
 		    cur = idx;
+		} */
+		
+		String pattern = "href=\"(.*?)\"";
+
+		// Create a Pattern object
+		Pattern r = Pattern.compile(pattern);
+
+		// Now create matcher object.
+		Matcher m = r.matcher(doc);
+		
+		while(m.find()){
+			int tmp = m.start();
+			String toadd=doc.substring(tmp+6, m.end()-1);
+			if(!toadd.contains(":") && !toadd.contains("#")){
+				toreturn.add(toadd);
+			}
 		}
+		
 		return toreturn;
 	}
 
