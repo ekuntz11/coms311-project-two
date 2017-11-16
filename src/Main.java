@@ -11,7 +11,7 @@ public class Main {
 		System.out.println("done in " + (endTime - startTime)/1000000000 + "seconds");
 		
 		System.out.println("GRAPH PROCESSING:");
-		GraphProcessor gp = new GraphProcessor("C:\\Users\\kuntz\\Development\\coms311-project-two\\src\\WikiCS.txt");
+		GraphProcessor gp = new GraphProcessor("C:\\Users\\kuntz\\Development\\coms311-project-two\\WikiCS.txt");
 		
 		int max_c = 0;
 		int max_out_degree = 0;
