@@ -275,7 +275,7 @@ public class GraphProcessor
 		return v.get_edges();
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		try{
 			GraphProcessor gp = new GraphProcessor("C:\\Users\\Merritt\\Documents\\GitHub\\ComS311\\coms311-project-two\\src\\eva_test.txt");
 			
@@ -322,6 +322,6 @@ public class GraphProcessor
 		}catch(FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
-	}
+	} */
 
 }

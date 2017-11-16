@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Main {
 
-	public static void main(String[] args) throws FileNotFoundException {
+	/*public static void main(String[] args) throws FileNotFoundException {
 		WikiCrawler w = new WikiCrawler("/wiki/Computer_Science", 200, null, "WikiCS.txt");
 		long startTime = System.nanoTime();
 		w.crawl();
@@ -37,6 +37,6 @@ public class Main {
 		System.out.println("Vertex with Highest Out Degree: " + v.get_name() + ", " + max_out_degree);
 		
 
-	}
+	}*/
 
 }
