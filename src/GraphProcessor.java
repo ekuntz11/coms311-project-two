@@ -281,13 +281,20 @@ public class GraphProcessor
 			
 			ArrayList<Vertex> vertices = gp.get_vertices();
 			int max=0;
+			ArrayList<String> max_nodes = new ArrayList<String>();
 			for(int i = 0; i < vertices.size(); i++) {
-				System.out.println(vertices.get(i).name + " Edges Size: " + vertices.get(i).edges.size());
+				//System.out.println(vertices.get(i).name + " Edges Size: " + vertices.get(i).edges.size());
 				if(max < vertices.get(i).edges.size()){
 					max = vertices.get(i).edges.size();
+					max_nodes = new ArrayList<String>();
+					max_nodes.add(vertices.get(i).name);
 				}
 			}
-			System.out.println("max: " +max);
+			System.out.println("max out degree:" + max);
+			System.out.println("Nodes with that degree: ");
+			for(int i=0;i<max_nodes.size();i++){
+				System.out.println(max_nodes.get(i));
+			}
 			
 					
 			ArrayList<String> path = gp.bfsPath("0", "3"); //Minneapoli
