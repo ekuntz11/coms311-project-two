@@ -266,7 +266,7 @@ public class WikiCrawler
 	 * @param args
 	 * @throws FileNotFoundException
 	 */
-	public static void main(String [] args) throws FileNotFoundException{
+	/*public static void main(String [] args) throws FileNotFoundException{
 		ArrayList<String> topics = new ArrayList<String>();
 		topics.add("computer");
 		topics.add("science");
@@ -286,7 +286,7 @@ public class WikiCrawler
 		//}
 		
 	
-	}
+	} */
 }
 
 

@@ -258,8 +258,7 @@ public class GraphProcessor
 	 * @return
 	 * 	array list of vertices
 	 */
-	public ArrayList<Vertex> get_vertices(){
-		/**TODO: Change to private!!!**/
+	private ArrayList<Vertex> get_vertices(){
 		return graph.get_vertices();
 	}
 	
@@ -275,19 +274,26 @@ public class GraphProcessor
 		return v.get_edges();
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		try{
 			GraphProcessor gp = new GraphProcessor("C:\\Users\\Merritt\\Documents\\GitHub\\ComS311\\coms311-project-two\\src\\eva_test.txt");
 			
 			ArrayList<Vertex> vertices = gp.get_vertices();
 			int max=0;
+			ArrayList<String> max_nodes = new ArrayList<String>();
 			for(int i = 0; i < vertices.size(); i++) {
-				System.out.println(vertices.get(i).name + " Edges Size: " + vertices.get(i).edges.size());
+				//System.out.println(vertices.get(i).name + " Edges Size: " + vertices.get(i).edges.size());
 				if(max < vertices.get(i).edges.size()){
 					max = vertices.get(i).edges.size();
+					max_nodes = new ArrayList<String>();
+					max_nodes.add(vertices.get(i).name);
 				}
 			}
-			System.out.println("max: " +max);
+			System.out.println("max out degree:" + max);
+			System.out.println("Nodes with that degree: ");
+			for(int i=0;i<max_nodes.size();i++){
+				System.out.println(max_nodes.get(i));
+			}
 			
 					
 			ArrayList<String> path = gp.bfsPath("0", "3"); //Minneapoli
@@ -315,6 +321,6 @@ public class GraphProcessor
 		}catch(FileNotFoundException e) {
 			System.out.println(e.getMessage());
 		}
-	}
+	} */
 
 }

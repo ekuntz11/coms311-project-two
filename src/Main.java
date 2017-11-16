@@ -4,14 +4,8 @@ import java.util.ArrayList;
 public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException {
-		/*WikiCrawler w = new WikiCrawler("/wiki/Computer_Science", 200, null, "WikiCS.txt");
-		long startTime = System.nanoTime();
-		w.crawl();
-		long endTime = System.nanoTime();
-		System.out.println("done in " + (endTime - startTime)/1000000000 + "seconds");
-		*/
 		
-		System.out.println("GRAPH PROCESSING:");
+		/*System.out.println("GRAPH PROCESSING:");
 		GraphProcessor gp = new GraphProcessor("C:\\Users\\kuntz\\Development\\coms311-project-two\\WikiCS.txt");
 		System.out.println(gp.num_vertices);
 		int max_c = 0;
@@ -19,7 +13,7 @@ public class Main {
 		Vertex v = null;
 	//	Vertex u = null;
 		int max = 0;
-		ArrayList<Vertex> vertices = gp.get_vertices();
+		//ArrayList<Vertex> vertices = gp.get_vertices();
 		
 		long startTime = System.nanoTime();
 		
@@ -46,7 +40,7 @@ public class Main {
 		//System.out.println("Total Nodes: " + gp.num_vertices);
 		System.out.println("Vertex with Highest Centrality: " + v.get_name() + ", " + max_c);
 		//System.out.println("Vertex with Highest Out Degree: " + v.get_name() + ", " + max_out_degree);
-		
+		*/
 
 	}
 
