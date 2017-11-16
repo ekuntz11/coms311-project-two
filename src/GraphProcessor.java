@@ -155,17 +155,23 @@ public class GraphProcessor
 	 */
 	public int diameter()
 	{
-		ArrayList<String> bfs = bfs(graph.get_vertices().get(0).name);
-		String s = bfs.get(bfs.size()-1);
-		ArrayList<String> second_bfs = bfs(s);
-		String t = second_bfs.get(second_bfs.size() - 1);
-		
-		ArrayList<String> diameter_list = bfsPath(s,t);
-		int diameter = diameter_list.size();
-		if(diameter == 0) {
-			return 2 * num_vertices;
-		}		
-		return (diameter - 1);
+		int max = 1;
+		int diameter = 0;
+		for(int i=0;i<graph.get_vertices().size();i++){
+			String s = graph.get_vertices().get(i).name;
+			for(int j=0; j<graph.get_vertices().size();j++){
+				String t = graph.get_vertices().get(j).name;
+				ArrayList<String> diameter_list = bfsPath(s,t);
+				diameter = diameter_list.size();
+				if(diameter ==0){
+					return 2*num_vertices;
+				}
+				if(diameter > max){
+					max = diameter;
+				}
+			}
+		}	
+		return (max - 1);
 	}
 	
 	/**
@@ -270,15 +276,19 @@ public class GraphProcessor
 	
 	public static void main(String[] args) {
 		try{
-			GraphProcessor gp = new GraphProcessor("C:\\Users\\kuntz\\Development\\coms311-project-two\\src\\eva_test_two.txt");
+			GraphProcessor gp = new GraphProcessor("C:\\Users\\Merritt\\Documents\\GitHub\\ComS311\\coms311-project-two\\src\\eva_test.txt");
 			
 			ArrayList<Vertex> vertices = gp.get_vertices();
+			int max=0;
 			for(int i = 0; i < vertices.size(); i++) {
 				System.out.println(vertices.get(i).name + " Edges Size: " + vertices.get(i).edges.size());
+				if(max < vertices.get(i).edges.size()){
+					max = vertices.get(i).edges.size();
+				}
 			}
+			System.out.println("max: " +max);
 			
-			System.out.println("Out degree of 3: " + gp.outDegree("3"));
-			
+					
 			ArrayList<String> path = gp.bfsPath("0", "3"); //Minneapoli
 			System.out.print("BFSPath: ");
 			for(int i = 0; i < path.size(); i ++) {
