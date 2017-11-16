@@ -168,6 +168,7 @@ public class GraphProcessor
 		return (diameter - 1);
 	}
 	
+	
 	/**
 	 * Private helper method that implements BFS starting from a
 	 * given root node.
@@ -252,7 +253,8 @@ public class GraphProcessor
 	 * @return
 	 * 	array list of vertices
 	 */
-	private ArrayList<Vertex> get_vertices(){
+	public ArrayList<Vertex> get_vertices(){
+		/**TODO: Change to private!!!**/
 		return graph.get_vertices();
 	}
 	
